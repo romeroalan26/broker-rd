@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from "react";
-import { Disclosure, Transition } from "@headlessui/react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   MapPin,
   Languages,
@@ -18,8 +17,91 @@ import puntaCanaImage from "../assets/punta-cana.webp";
 import santoDomingoImage from "../assets/santo-domingo.webp";
 import capCanaImage from "../assets/cap-cana.webp";
 
+// Componente de imagen con carga suave
+const SmoothImage = ({ src, alt, className }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="relative">
+      <div
+        className={`absolute inset-0 rounded-3xl -rotate-6 transition-all duration-700 ${
+          isVisible ? "opacity-10" : "opacity-0"
+        }`}
+        style={{ backgroundColor: "#CF5307" }}
+      />
+      <div
+        className={`absolute inset-0 rounded-3xl bg-gray-200 animate-pulse transition-opacity duration-700 ${
+          !isLoading ? "opacity-0" : "opacity-100"
+        }`}
+      />
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} transition-all duration-700 ${
+          isVisible && !isLoading
+            ? "opacity-100 scale-100"
+            : "opacity-0 scale-95"
+        }`}
+        onLoad={() => setIsLoading(false)}
+      />
+    </div>
+  );
+};
+
+// Componente FAQ
+const FAQItem = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef(null);
+
+  return (
+    <div className="group relative bg-white rounded-2xl p-6 hover:shadow-xl transition-all duration-300 border-2 border-gray-100 hover:border-[#CF5307]/20">
+      <div className="flex justify-between items-start gap-4">
+        <div className="flex-1">
+          <button
+            className="w-full text-left flex items-center justify-between gap-4"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <h3 className="text-lg font-medium text-gray-900 group-hover:text-[#CF5307] transition-colors duration-300">
+              {question}
+            </h3>
+            <div
+              className={`flex-shrink-0 p-2 rounded-full border-2 border-gray-200 group-hover:border-[#CF5307] ${
+                isOpen ? "bg-[#CF5307]/10" : ""
+              } transition-all duration-300`}
+            >
+              <ChevronDown
+                className={`w-5 h-5 text-gray-500 group-hover:text-[#CF5307] transform transition-transform duration-300 ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+              />
+            </div>
+          </button>
+
+          <div
+            ref={contentRef}
+            className="mt-4 text-gray-600 overflow-hidden transition-all duration-300"
+            style={{
+              maxHeight: isOpen ? contentRef.current?.scrollHeight + "px" : "0",
+            }}
+          >
+            <div className="prose prose-lg">{answer}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Landing = () => {
-  const [selectedLocation, setSelectedLocation] = React.useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const locationsContainerRef = useRef(null);
 
   const handleWhatsAppClick = () => {
@@ -63,7 +145,26 @@ const Landing = () => {
     },
   ];
 
-  const languages = ["Español", "English", "Français"];
+  const languages = [
+    {
+      language: "Español",
+      message: "Empezar una conversación",
+      whatsappMessage:
+        "¡Hola! Me gustaría obtener más información sobre las propiedades disponibles.",
+    },
+    {
+      language: "English",
+      message: "Start a conversation",
+      whatsappMessage:
+        "Hello! I would like to get more information about available properties.",
+    },
+    {
+      language: "Français",
+      message: "Commencer une conversation",
+      whatsappMessage:
+        "Bonjour! Je souhaite obtenir plus d'informations sur les propriétés disponibles.",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -88,7 +189,7 @@ const Landing = () => {
 
       {/* Hero Section */}
       <div className="relative pt-20">
-        <div className="absolute inset-0 bg-[#CF5307]/5 skew-y-[-5deg] transform origin-top-left"></div>
+        <div className="absolute inset-0 bg-[#CF5307]/5 skew-y-[-5deg] transform origin-top-left" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32 relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -114,17 +215,11 @@ const Landing = () => {
               </button>
             </div>
 
-            <div className="relative">
-              <div
-                className="absolute inset-0 rounded-3xl -rotate-6"
-                style={{ backgroundColor: "#CF5307", opacity: 0.1 }}
-              ></div>
-              <img
-                src={eddyImage}
-                alt="Eddy Perdomo"
-                className="relative rounded-3xl shadow-2xl w-full object-cover rotate-3 hover:rotate-0 transition-transform duration-500"
-              />
-            </div>
+            <SmoothImage
+              src={eddyImage}
+              alt="Eddy Perdomo"
+              className="rounded-3xl shadow-2xl w-full object-cover rotate-3 hover:rotate-0"
+            />
           </div>
         </div>
       </div>
@@ -160,7 +255,7 @@ const Landing = () => {
               },
             ].map((service, idx) => (
               <div key={idx} className="group relative h-full">
-                <div className="absolute inset-0 bg-white rounded-2xl transform transition-transform duration-300 group-hover:-translate-y-2"></div>
+                <div className="absolute inset-0 bg-white rounded-2xl transform transition-transform duration-300 group-hover:-translate-y-2" />
                 <div className="relative p-8 bg-white rounded-2xl shadow-lg transition-all duration-300 group-hover:shadow-xl h-full flex flex-col">
                   <service.icon
                     className="w-12 h-12 mb-6 transform transition-transform duration-300 group-hover:scale-110 flex-shrink-0"
@@ -228,12 +323,12 @@ const Landing = () => {
                     <div className="transform transition-all duration-700 ease-out">
                       <div className="bg-white rounded-xl overflow-hidden shadow-lg">
                         <div className="relative">
-                          <img
+                          <SmoothImage
                             src={selectedLocation.image}
                             alt={selectedLocation.name}
-                            className="w-full h-48 object-cover transition-transform duration-500 hover:scale-105"
+                            className="w-full h-48 object-cover hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30"></div>
+                          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30" />
                         </div>
                         <div className="p-6">
                           <h4
@@ -261,22 +356,35 @@ const Landing = () => {
                     className="w-12 h-12 mb-6"
                     style={{ color: "#CF5307" }}
                   />
-                  <h3 className="text-2xl font-bold mb-8 text-gray-900 ">
+                  <h3 className="text-2xl font-bold mb-8 text-gray-900">
                     Idiomas
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {languages.map((language, idx) => (
-                      <div
+                  <div className="space-y-3">
+                    {languages.map((lang, idx) => (
+                      <button
                         key={idx}
-                        className="rounded-lg p-4 text-center transition-colors duration-300 hover:text-white hover:bg-[#CF5307]"
-                        style={{
-                          backgroundColor: "#FFF",
-                          color: "#CF5307",
-                          border: "2px solid #CF5307",
+                        className="w-full p-4 rounded-xl bg-white border-2 border-[#CF5307]/20 hover:border-[#CF5307] flex items-center justify-between group transition-all duration-300 hover:shadow-lg"
+                        onClick={() => {
+                          const message = encodeURIComponent(
+                            lang.whatsappMessage
+                          );
+                          window.open(
+                            `https://wa.me/18099057209?text=${message}`,
+                            "_blank"
+                          );
                         }}
                       >
-                        {language}
-                      </div>
+                        <span
+                          className="font-medium"
+                          style={{ color: "#CF5307" }}
+                        >
+                          {lang.language}
+                        </span>
+                        <span className="text-sm text-gray-500 flex items-center gap-2 group-hover:text-[#CF5307] transition-colors duration-300">
+                          {lang.message}
+                          <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform opacity-0 group-hover:opacity-100" />
+                        </span>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -286,64 +394,16 @@ const Landing = () => {
         </div>
       </div>
 
-      {/* Social Links */}
-      <div className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2
-            className="text-3xl font-bold text-center mb-16"
-            style={{ color: "#CF5307" }}
-          >
-            Síguenos en Redes Sociales
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Instagram,
-                label: "@eddy.gestinm",
-                href: "https://www.instagram.com/eddy.gestinm",
-              },
-              {
-                icon: Instagram,
-                label: "@gestinm.rd",
-                href: "https://www.instagram.com/gestinm.rd",
-              },
-              {
-                icon: Globe,
-                label: "www.gestinm.com",
-                href: "https://www.gestinm.com",
-              },
-            ].map((link, idx) => (
-              <a
-                key={idx}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative overflow-hidden rounded-xl"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#CF5307] to-[#CF5307]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative p-8 bg-white border-2 border-gray-100 rounded-xl flex items-center justify-center gap-4 group-hover:border-transparent transition-all duration-300">
-                  <link.icon
-                    className="w-6 h-6 transition-colors duration-300"
-                    style={{ color: "#CF5307" }}
-                  />
-                  <span className="text-gray-900 font-medium">
-                    {link.label}
-                  </span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
       {/* FAQ Section */}
       <div className="py-24 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
             className="text-3xl font-bold text-center mb-16"
             style={{ color: "#CF5307" }}
           >
             Preguntas Frecuentes
           </h2>
+
           <div className="grid gap-6">
             {[
               {
@@ -407,49 +467,22 @@ const Landing = () => {
                   "Entre los riesgos potenciales están las demoras en el proceso de construcción para proyectos en pre-venta, fluctuaciones en el mercado turístico, y costos imprevistos en la gestión de propiedades. Sin embargo, estos riesgos pueden minimizarse mediante un análisis exhaustivo, la selección de desarrollos consolidados y la asesoría de expertos.",
               },
             ].map((faq, index) => (
-              <Disclosure
+              <FAQItem
                 key={index}
-                as="div"
-                className="border-b-2 border-gray-100 last:border-b-0"
-              >
-                {({ open }) => (
-                  <>
-                    <Disclosure.Button className="w-full py-6 flex justify-between items-center text-left">
-                      <span className="text-lg font-medium text-gray-900">
-                        {faq.question}
-                      </span>
-                      <ChevronDown
-                        className={`w-5 h-5 transform transition-transform duration-300 ${
-                          open ? "rotate-180" : ""
-                        }`}
-                        style={{ color: "#CF5307" }}
-                      />
-                    </Disclosure.Button>
-                    <Transition
-                      enter="transition duration-100 ease-out"
-                      enterFrom="transform scale-95 opacity-0"
-                      enterTo="transform scale-100 opacity-100"
-                      leave="transition duration-75 ease-out"
-                      leaveFrom="transform scale-100 opacity-100"
-                      leaveTo="transform scale-95 opacity-0"
-                    >
-                      <Disclosure.Panel className="pb-6 text-gray-600">
-                        {faq.answer}
-                      </Disclosure.Panel>
-                    </Transition>
-                  </>
-                )}
-              </Disclosure>
+                question={faq.question}
+                answer={faq.answer}
+              />
             ))}
           </div>
         </div>
       </div>
+
       {/* Contact CTA */}
       <div
         className="relative py-24 overflow-hidden"
         style={{ backgroundColor: "#CF5307" }}
       >
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjk4IDE1MWMxODQuNiAwIDMzNC42IDE1MCAzMzQuNiAzMzQuNiAwIDE4NC42LTE1MCAzMzQuNi0zMzQuNiAzMzQuNlMtMzYuNiA2NzAuMi0zNi42IDQ4NS42YzAtMTg0LjYgMTUwLTMzNC42IDMzNC42LTMzNC42eiIgZmlsbC1ydWxlPSJldmVub2RkIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9Ii4wNSIvPjwvc3ZnPg==')] bg-repeat opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMjk4IDE1MWMxODQuNiAwIDMzNC42IDE1MCAzMzQuNiAzMzQuNiAwIDE4NC42LTE1MCAzMzQuNi0zMzQuNiAzMzQuNlMtMzYuNiA2NzAuMi0zNi42IDQ4NS42YzAtMTg0LjYgMTUwLTMzNC42IDMzNC42LTMzNC42eiIgZmlsbC1ydWxlPSJldmVub2RkIiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9Ii4wNSIvPjwvc3ZnPg==')] bg-repeat opacity-10" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center">
             <h2 className="text-4xl font-bold text-white mb-8">
