@@ -13,10 +13,10 @@ import {
   Target,
   ChevronDown,
 } from "lucide-react";
-import eddyImage from "../assets/eddy.jpg";
-import puntaCanaImage from "../assets/punta-cana.jpg";
-import santoDomingoImage from "../assets/santo-domingo.jpg";
-import capCanaImage from "../assets/cap-cana.jpg";
+import eddyImage from "../assets/eddy.webp";
+import puntaCanaImage from "../assets/punta-cana.webp";
+import santoDomingoImage from "../assets/santo-domingo.webp";
+import capCanaImage from "../assets/cap-cana.webp";
 
 const Landing = () => {
   const [selectedLocation, setSelectedLocation] = React.useState(null);
@@ -261,7 +261,7 @@ const Landing = () => {
                     className="w-12 h-12 mb-6"
                     style={{ color: "#CF5307" }}
                   />
-                  <h3 className="text-2xl font-bold mb-8 text-gray-900">
+                  <h3 className="text-2xl font-bold mb-8 text-gray-900 ">
                     Idiomas
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
