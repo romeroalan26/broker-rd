@@ -166,6 +166,27 @@ const Landing = () => {
     },
   ];
 
+  const socialLinks = [
+    {
+      icon: Instagram,
+      label: "Eddy Perdomo",
+      username: "@eddy.gestinm",
+      url: "https://instagram.com/eddy.gestinm",
+    },
+    {
+      icon: Instagram,
+      label: "GESTINM",
+      username: "@gestinm.rd",
+      url: "https://instagram.com/gestinm.rd",
+    },
+    {
+      icon: Globe,
+      label: "Sitio Web",
+      username: "https://www.gestinm.com/",
+      url: "https://www.gestinm.com/",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navbar */}
@@ -466,12 +487,92 @@ const Landing = () => {
                 answer:
                   "Entre los riesgos potenciales están las demoras en el proceso de construcción para proyectos en pre-venta, fluctuaciones en el mercado turístico, y costos imprevistos en la gestión de propiedades. Sin embargo, estos riesgos pueden minimizarse mediante un análisis exhaustivo, la selección de desarrollos consolidados y la asesoría de expertos.",
               },
+              {
+                question:
+                  "11-¿Cuál es la documentación necesaria para comprar una propiedad en la República Dominicana si eres extranjero?",
+                answer: (
+                  <>
+                    <p>
+                      <strong>¡Felicidades!</strong>
+                    </p>
+                    <p>
+                      Estás un paso más cerca de adquirir tu propio apartamento.
+                    </p>
+                    <p>
+                      Una vez realizado el pago de la reserva de tu unidad,
+                      deberás presentar la siguiente documentación:
+                    </p>
+                    <ul>
+                      <li>
+                        ✅ <strong>Carta de trabajo</strong>
+                      </li>
+                      <li>
+                        ✅ <strong>Pasaporte vigente</strong>
+                      </li>
+                      <li>
+                        ✅ <strong>INCONTAX</strong> (puede añadirse más
+                        adelante, durante el proceso de construcción, si es
+                        necesario).
+                      </li>
+                      <li>
+                        ✅ <strong>Pay stub</strong> o los{" "}
+                        <strong>últimos 6 estados de cuenta bancarios</strong>.
+                      </li>
+                    </ul>
+                    <p>
+                      Si tienes alguna duda,{" "}
+                      <strong>contáctame ahora mismo</strong>. ¡Estoy aquí para
+                      ayudarte!
+                    </p>
+                  </>
+                ),
+              },
             ].map((faq, index) => (
               <FAQItem
                 key={index}
                 question={faq.question}
                 answer={faq.answer}
               />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Social Media Section */}
+      <div className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2
+            className="text-3xl font-bold text-center mb-16"
+            style={{ color: "#CF5307" }}
+          >
+            Síguenos en Redes Sociales
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {socialLinks.map((social, idx) => (
+              <a
+                key={idx}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative bg-white rounded-2xl p-8 hover:shadow-xl transition-all duration-300 border-2 border-gray-100 hover:border-[#CF5307]/20"
+              >
+                <div className="flex flex-col items-center text-center">
+                  <div className="p-4 rounded-full bg-[#CF5307]/5 mb-6 group-hover:bg-[#CF5307]/10 transition-colors duration-300">
+                    <social.icon
+                      className="w-8 h-8 transform transition-transform duration-300 group-hover:scale-110"
+                      style={{ color: "#CF5307" }}
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                    {social.label}
+                  </h3>
+                  <p className="text-gray-600 mb-4">{social.username}</p>
+                  <span className="inline-flex items-center gap-2 text-sm font-medium text-[#CF5307] group-hover:gap-3 transition-all duration-300">
+                    Visitar
+                    <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
+              </a>
             ))}
           </div>
         </div>
