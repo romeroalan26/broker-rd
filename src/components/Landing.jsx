@@ -495,9 +495,7 @@ const Landing = () => {
                     <p>
                       <strong>¡Felicidades!</strong>
                     </p>
-                    <p>
-                      Estás un paso más cerca de adquirir tu propio apartamento.
-                    </p>
+                    <p>Estás un paso más cerca de adquirir tu propiedad.</p>
                     <p>
                       Una vez realizado el pago de la reserva de tu unidad,
                       deberás presentar la siguiente documentación:
